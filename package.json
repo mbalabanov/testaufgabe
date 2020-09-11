@@ -1,0 +1,21 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^3.5.5",
+    "express": "^4.17.1",
+    "install": "^0.13.0",
+    "line-reader": "^0.4.0",
+    "moment": "^2.24.0",
+    "npm": "^6.10.3",
+    "promise": "^8.0.3",
+    "sqlite": "^3.0.3"
+  }
+}

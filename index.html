@@ -1,0 +1,109 @@
+<!--
+  AUFGABE 1
+  Setzen Sie den Fokus beim Laden der Seite in das Eingabefeld "Betrag", so dass der Benutzer sofort eine Eingabe
+  tätigen kann.
+--><!doctype html>
+<html>
+  <head>
+    <title></title>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> 
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/css/bootstrap-select.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/bootstrap-select.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.9/dist/js/i18n/defaults-de_DE.min.js"></script>
+  </head>
+  <body>
+    <div class="container p-5">
+      <form>
+        <div class="row">
+          <div class="col">
+            <input id="amount" class="form-control" type="text" width="5" placeholder="Betrag">
+          </div>
+          <div class="col">
+            <select id="from">
+              <option></option>
+            </select>
+          </div>
+          <div class="col text-center">
+            <button id="flip" type="button" class="btn btn-primary">
+              <i class="fa fa-arrow-left"></i>
+              <i class="fa fa-arrow-right"></i>
+            </button>
+          </div>
+          <div class="col">
+            <input id="result" class="form-control" type="text" width="5" placeholder="Betrag" readonly>
+          </div>
+          <div class="col">
+            <select id="to">
+              <option></option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+    
+    <script>
+
+      // LÖSUNG ZU AUFGABE 1
+      $(amount).focus();
+
+      var currencies = [{code: "EUR", rate: 1}];
+      $.getJSON("currencies.php", function(data) {
+        currencies = currencies.concat(data)
+        data.forEach(function(currency) {
+          $("#from option:first").clone().text(currency.code).appendTo($("#from")).attr('value', currency.code)
+          $("#to option:first").clone().text(currency.code).appendTo($("#to")).attr('value', currency.code)
+        })
+        
+        $("#from option:first").remove()
+        $("#from option:contains('EUR')").attr("selected", "selected")
+        
+        $("select").selectpicker({
+          liveSearch: true
+        })
+      })
+      
+      $("#flip").click(function() {
+        if ($("#from").val() && $("#to").val()) {
+          // AUFGABE 2
+          // Beim Klick auf den Button "#flip" sollen Quell- und Zielwährung ausgetauscht werden.
+          // Nach dem Austauschen der Währungen soll die Berechnung neu durchgeführt werden, so dass das Ergebnis wieder 
+          // korrekt ist.
+
+          // LÖSUNG ZU AUFGABE 2
+
+          var fromVal = $("#from").val();
+          var toVal = $("#to").val();
+
+          $("#from").val(toVal).change();
+          $("#to").val(fromVal).change();
+
+        }
+
+      })
+      
+      var calc = function() {
+        if ($("#from").val() && $("#to").val() && !isNaN(parseInt($("#amount").val()))) {
+
+          var result = parseInt($("#amount").val()) / 
+              currencies.find(function(currency) {return currency.code == $("#from").val()}).rate *
+              currencies.find(function(currency) {return currency.code == $("#to").val()}).rate
+
+          // AUFGABE 3
+          // Für das Ergebnis der Berrechnung sollen nur zwei Dezimalstellen angezeigt werden (die genaue Rundung ist 
+          // egal). Im Ergebnis soll das englische Dezimaltrennzeichen "." durch das deutsche Dezimaltrennzeichen "," 
+          // ausgetauscht werden.
+
+          // LÖSUNG ZU AUFGABE 3
+          var cleanedResult = result.toFixed(2);
+          $("#result").val(cleanedResult.replace(/\./g, ','))
+        }
+      }
+
+      $("select, #amount").change(  calc )
+    </script>
+  </body>
+</html>
