@@ -14,7 +14,9 @@ async function main() {
 
 
   const importer = require("./lib/importer")
-  importer.import()
+
+  // LÖSUNG ZU AUFGABE 1
+  await importer.import()
   
   const db = await sqlite.open("rates.node.sqlite")
   let currencies = await db.all("SELECT code, rate FROM currency LEFT JOIN fx ON fx.`to` = currency.id GROUP BY code ORDER BY date")
